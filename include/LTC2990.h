@@ -6,11 +6,12 @@
 #include <math.h>
 class LTC2900
 {
+public:
+
+
 private:
     /* data */
-public:
-    LTC2900(/* args */);
-    ~LTC2900();
+
 };
 
 LTC2900::LTC2900(/* args */)
