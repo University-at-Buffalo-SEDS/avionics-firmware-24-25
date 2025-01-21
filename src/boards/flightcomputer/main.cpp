@@ -4,42 +4,34 @@
 #include <STM32FreeRTOS.h>
 #include <cmath>
 
-// Include your sensor drivers
 #include "BMI088Accel.hpp"
 #include "BMI088Gyro.hpp"
 #include "BMP390.hpp"
 
-// Include configuration, Kalman filter, and related headers
 #include "stm32pinouts.hpp"
 #include "consts.hpp"
 #include "kalman.hpp"
 #include "avghistory.hpp"
 
-// If using USB for debugging
 #if defined(USBCON) && defined(USBD_USE_CDC)
 #include "USBSerial.h"
 USBSerial usb_serial;
 #endif
 
-// Forward declarations of tasks
 void TaskReadSensors(void* pvParameters);
 void TaskPrintSensors(void* pvParameters);
 void TaskDeployment(void* pvParameters);
 
-// Forward declarations of utility functions
 uint32_t delta(uint32_t start, uint32_t end);
 
-// Global sensor instances
 BMI088Accel accel(ACCEL_CS_PIN);
 BMI088Gyro gyro(GYRO_CS_PIN);
 BMP390 barometer(BARO_CS_PIN);
 
-// Sensor data arrays
 float accelData[3];
 float gyroData[3];
 float baroData[3]; // altitude, pressure, temperature
 
-// Mutexes for sensor data
 SemaphoreHandle_t xAccelDataMutex;
 SemaphoreHandle_t xGyroDataMutex;
 SemaphoreHandle_t xBaroDataMutex;
@@ -48,7 +40,6 @@ static KalmanFilter kf(KALMAN_PERIOD / 1000.0f, ALTITUDE_SIGMA, ACCELERATION_SIG
 
 SemaphoreHandle_t xKalmanMutex;
 
-// Flight phase enumeration
 enum class FlightPhase {
     Startup,
     Idle,
@@ -58,18 +49,15 @@ enum class FlightPhase {
     Landed
 };
 
-// Additional global variables for flight logic
 static bool launched = false;
 static FlightPhase phase = FlightPhase::Startup;
 
-// For estimating gravity and ground level
 static AvgHistory<float, EST_HISTORY_SAMPLES, 3> gravity_est_state;
 static AvgHistory<float, EST_HISTORY_SAMPLES, 3> ground_level_est_state;
 
 static uint32_t land_time = 0;
 static kfloat_t apogee = 0.0f;
 
-// Utility function for time delta
 uint32_t delta(uint32_t start, uint32_t end) {
     if (end >= start) return end - start;
     return (UINT32_MAX - start) + end + 1;

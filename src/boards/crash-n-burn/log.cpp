@@ -93,7 +93,7 @@ void log_step() {
             current_block_erased = true;
             break; // Wait until next call after erase
         }
-        current_block_erased = false;
+            current_block_erased = false;
 
         // If not enough data to fill a page, wait
         if (write_buf.used() < bytes_per_page) {
