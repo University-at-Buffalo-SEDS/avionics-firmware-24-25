@@ -8,6 +8,7 @@ struct __attribute__((packed)) LogMessage {
     float accel_x, accel_y, accel_z;
     float temp;
     float pressure;
+    float kalman_pos, kalman_rate, kalman_accel;
     uint8_t checksum;
 
     LogMessage() = default;
@@ -15,11 +16,12 @@ struct __attribute__((packed)) LogMessage {
     LogMessage(uint32_t time_ms,
                float gyro_x, float gyro_y, float gyro_z,
                float accel_x, float accel_y, float accel_z,
-               float temp, float pressure)
+               float temp, float pressure, float kPos, float kRate, float kAccel)
         : time_ms(time_ms),
           gyro_x(gyro_x), gyro_y(gyro_y), gyro_z(gyro_z),
           accel_x(accel_x), accel_y(accel_y), accel_z(accel_z),
-          temp(temp), pressure(pressure), checksum(0)
+          temp(temp), 
+          pressure(pressure), kalman_pos(kPos), kalman_rate(kRate), kalman_accel(kAccel), checksum(0)
     {
         checksum = calculate_checksum();
     }

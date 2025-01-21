@@ -9,7 +9,7 @@
 #define EEPROM_FLIGHT_ADDR 0
 
 // Adjust buffer sizes as needed
-#define LOG_BUF_SIZE 50 // Number of LogMessages in buffer
+#define LOG_BUF_SIZE 75 // Number of LogMessages in buffer
 #define LOG_WRITE_BUF_SIZE (LOG_BUF_SIZE * sizeof(LogMessage))
 
 // Flash memory and buffers
@@ -155,7 +155,7 @@ static void log_print_flight(uint8_t flight) {
 }
 
 static void log_print_msg(const LogMessage& msg) {
-    Serial.print(msg.time_ms); Serial.print(',');
+    Serial.print(msg.time_ms); Serial.print(', ');
     Serial.print(msg.gyro_x, 2); Serial.print(',');
     Serial.print(msg.gyro_y, 2); Serial.print(',');
     Serial.print(msg.gyro_z, 2); Serial.print(',');
@@ -164,5 +164,8 @@ static void log_print_msg(const LogMessage& msg) {
     Serial.print(msg.accel_z, 2); Serial.print(',');
     Serial.print(msg.temp, 2); Serial.print(',');
     Serial.print(msg.pressure, 2);
+    Serial.print(msg.kalman_pos, 2); Serial.print(',');
+    Serial.print(msg.kalman_rate, 2); Serial.print(',');
+    Serial.print(msg.kalman_accel, 2);
     Serial.println();
 }

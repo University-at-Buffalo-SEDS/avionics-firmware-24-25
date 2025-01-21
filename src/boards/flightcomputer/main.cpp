@@ -2,7 +2,6 @@
 #include <SPI.h>
 #include <Wire.h>
 #include <STM32FreeRTOS.h>
-#include <cmath>
 
 #include "BMI088Accel.hpp"
 #include "BMI088Gyro.hpp"
