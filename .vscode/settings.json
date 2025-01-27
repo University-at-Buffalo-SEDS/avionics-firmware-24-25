@@ -1,14 +1,6 @@
 {
     "cmake.sourceDirectory": "/home/seds/Documents/Code/crash-n-burn-2024/variants/G491C(C-E)T_G4A1CET",
     "files.associations": {
-        "optional": "cpp",
-        "istream": "cpp",
-        "ostream": "cpp",
-        "system_error": "cpp",
-        "array": "cpp",
-        "functional": "cpp",
-        "tuple": "cpp",
-        "type_traits": "cpp",
-        "utility": "cpp"
+        "cmath": "cpp"
     }
 }

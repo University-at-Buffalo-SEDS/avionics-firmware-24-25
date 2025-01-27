@@ -2,7 +2,7 @@
 #include <Wire.h>
 #include <STM32FreeRTOS.h>
 
-#include "LTC2990.h"
+#include "LTC2990.hpp"
 
 #include <ACANFD-STM32-fixed-ram-sections.h>
 #include <ACANFD_STM32_NUCLEO_G474RE-objects.h>
