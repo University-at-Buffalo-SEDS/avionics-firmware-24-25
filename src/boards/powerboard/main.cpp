@@ -2,11 +2,6 @@
 #include <Wire.h>
 #include <STM32FreeRTOS.h>
 
-#include "LTC2990.hpp"
-
-#include <ACANFD-STM32-fixed-ram-sections.h>
-#include <ACANFD_STM32_NUCLEO_G474RE-objects.h>
-
 #if !defined(HAL_CAN_MODULE_ENABLED)
 #define HAL_CAN_MODULE_ENABLED
 #endif
@@ -15,23 +10,12 @@
 #include "USBSerial.h"
 USBSerial usb_serial;
 #endif
+
 #include <stm32g4xx_hal_fdcan.h>
-
-// Create an instance of the LTC2990 device
-LTC2990 ltc2990;
-
-// Shared data structure
-float ltcVoltages[4];
-
-// Mutex for thread safety
-SemaphoreHandle_t xLTCDataMutex;
-
-// Task function declarations
-void TaskReadLTC(void* pvParameters);
-void TaskPrintLTC(void* pvParameters);
 
 /* Private function prototypes -----------------------------------------------*/
 static void MX_GPIO_Init(void);
+static void FDCAN_Config(void);
 static void MX_FDCAN2_Init(void);
 
 FDCAN_HandleTypeDef hfdcan2;
@@ -55,22 +39,12 @@ void setup() {
     Wire.begin();
 
     // Setup the device
-    ltc2990.setup();
 
     // Setup CAN
     MX_FDCAN2_Init();
     FDCAN_Config();
 
     // Create mutex for shared data
-    xLTCDataMutex = xSemaphoreCreateMutex();
-
-    if (xLTCDataMutex == NULL) {
-        Serial.println(F("Error creating mutex"));
-        while (1);
-    }
-
-    xTaskCreate(TaskReadLTC, "ReadLTC", 256, NULL, 2, NULL);
-    xTaskCreate(TaskPrintLTC, "PrintLTC", 256, NULL, 1, NULL);
 
     vTaskStartScheduler();
 }
@@ -166,47 +140,4 @@ static void FDCAN_Config(void)
   TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
   TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
   TxHeader.MessageMarker = 0;
-}
-
-// Task to read data from LTC2990
-void TaskReadLTC(void* pvParameters) {
-    (void) pvParameters;
-
-    for (;;) {
-        // Read data from LTC2990
-        ltc2990.step();
-
-        // Copy data with mutex protection
-        if (xSemaphoreTake(xLTCDataMutex, portMAX_DELAY) == pdTRUE) {
-            ltc2990.get(ltcVoltages);
-            xSemaphoreGive(xLTCDataMutex);
-        }
-
-        // Delay for 100 ms
-        vTaskDelay(pdMS_TO_TICKS(100));
-    }
-}
-
-// Task to print data from LTC2990
-void TaskPrintLTC(void* pvParameters) {
-    (void) pvParameters;
-
-    for (;;) {
-        // Print LTC2990 data
-        if (xSemaphoreTake(xLTCDataMutex, portMAX_DELAY) == pdTRUE) {
-            Serial.print(F("Voltages: "));
-            for (int i = 0; i < 4; i++) {
-                Serial.print(F("V"));
-                Serial.print(i + 1);
-                Serial.print(F(": "));
-                Serial.print(ltcVoltages[i], 6);
-                Serial.print(F(" V "));
-            }
-            Serial.println();
-            xSemaphoreGive(xLTCDataMutex);
-        }
-    
-        // Delay for 100 ms
-        vTaskDelay(pdMS_TO_TICKS(100));
-    }
 }
