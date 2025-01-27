@@ -155,7 +155,7 @@ static void log_print_flight(uint8_t flight) {
 }
 
 static void log_print_msg(const LogMessage& msg) {
-    Serial.print(msg.time_ms); Serial.print(', ');
+    Serial.print(msg.time_ms); Serial.print(',');
     Serial.print(msg.gyro_x, 2); Serial.print(',');
     Serial.print(msg.gyro_y, 2); Serial.print(',');
     Serial.print(msg.gyro_z, 2); Serial.print(',');
@@ -163,7 +163,7 @@ static void log_print_msg(const LogMessage& msg) {
     Serial.print(msg.accel_y, 2); Serial.print(',');
     Serial.print(msg.accel_z, 2); Serial.print(',');
     Serial.print(msg.temp, 2); Serial.print(',');
-    Serial.print(msg.pressure, 2);
+    Serial.print(msg.pressure, 2); Serial.print(',');
     Serial.print(msg.kalman_pos, 2); Serial.print(',');
     Serial.print(msg.kalman_rate, 2); Serial.print(',');
     Serial.print(msg.kalman_accel, 2);

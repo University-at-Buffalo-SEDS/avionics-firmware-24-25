@@ -167,9 +167,6 @@ void FlashMemory::write(size_t page_addr, uint8_t page[FLIGHT_FLASH_PAGE_SIZE]) 
 void FlashMemory::read(size_t page_addr, uint8_t page[FLIGHT_FLASH_PAGE_SIZE]) {
     assert(!flash_busy_internal());
 
-    Serial.print(F("Reading page at address: 0x"));
-    Serial.println(page_addr, HEX);
-
     spi_begin();
     sendCommand(FlashInstruction::READ_DATA);
 
@@ -183,6 +180,4 @@ void FlashMemory::read(size_t page_addr, uint8_t page[FLIGHT_FLASH_PAGE_SIZE]) {
         page[i] = SPI.transfer(0x00);
     }
     spi_end();
-
-    Serial.println(F("Read Complete."));
 }
