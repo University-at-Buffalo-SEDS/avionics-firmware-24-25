@@ -12,9 +12,9 @@
 #include "DRV8825.h"
 #include <Arduino.h>
 
+#include "FillSystemSTM32Pinouts.hpp"
+
 DRV8825 stepper;
-const int DIRECTION_PIN = 9; //PA1
-const int STEP_PIN = 8; //PA0
 
 
 
@@ -28,7 +28,7 @@ void setup()
   //write code to display letter assignments to user
   //i.e. type A for motor, C for whatever
 
-  stepper.begin(DIRECTION_PIN, STEP_PIN);
+  stepper.begin(STEPPER_DIRECTION_PIN, STEPPER_CONTROL_PIN);
 
 }
 
@@ -38,7 +38,9 @@ void loop()
     int action = 0;
     switch (action) {
         case 0: //Stepper Motor, the fuel actuator
-            //whatever
+            stepper.setDirection(DRV8825_CLOCK_WISE);
+            stepper.setDirection(DRV8825_COUNTERCLOCK_WISE);
+            stepper.step();
             break;
         //LINEAR ACTUATOR HAS A SPECIFIC IMPLEMENTATION: ASK JUSTIN ;)
         //Basically, the way the H-Bridge works means that there are 4 inputs
@@ -71,9 +73,6 @@ void loop()
             break;
     }
 
-    stepper.setDirection(DRV8825_CLOCK_WISE);
-    stepper.setDirection(DRV8825_COUNTERCLOCK_WISE);
-    stepper.step();
 
 }
 
