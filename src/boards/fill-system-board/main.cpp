@@ -9,6 +9,7 @@
 //This doesn't need to be made with RTOS right?
 
 #include "DRV8825.h"
+#include <Arduino.h>
 
 DRV8825 stepper;
 const int DIRECTION_PIN = 9; //PA1
@@ -33,9 +34,9 @@ void setup()
 
 void loop()
 {
-    char action = 0;
+    const char action = "A";
     switch (action) {
-        case 0: //Stepper Motor, the fuel actuator
+        case "A": //Stepper Motor, the fuel actuator
             //whatever
             break;
         //LINEAR ACTUATOR HAS A SPECIFIC IMPLEMENTATION: ASK JUSTIN ;)
