@@ -4,7 +4,8 @@
 //TODO:
 //Write switch case for doing each valve
 //The switch case will be a letter for each valve
-//Find drivers for lin act
+//Other than the DRV8825, all valves and actuators
+//only need a logic high from the STM32 to actuate
 
 //This doesn't need to be made with RTOS right?
 
@@ -34,9 +35,9 @@ void setup()
 
 void loop()
 {
-    const char action = "A";
+    int action = 0;
     switch (action) {
-        case "A": //Stepper Motor, the fuel actuator
+        case 0: //Stepper Motor, the fuel actuator
             //whatever
             break;
         //LINEAR ACTUATOR HAS A SPECIFIC IMPLEMENTATION: ASK JUSTIN ;)
@@ -48,7 +49,7 @@ void loop()
         //In this case: here are the possible variants with direction
         // P_FWD    P_BCKWD     N_FWD   N_BCKWD Direction
         // open     close       open    close   forward
-        // close    open        close    open   backward
+        // close    open        close   open    backward
         //You may notice that there could be more variations, like
         //if P_FWD and P_BCKWD are both closed
         //In short, DO NOT DO THIS
@@ -56,16 +57,13 @@ void loop()
         //fry the H-Bridge, killing it before it could lead a fruitful life
         //So just follow the table and everything is hunky dory
         //Source: https://www.modularcircuits.com/blog/articles/h-bridge-secrets/h-bridges-the-basics/
-        case 1: //Linear Actuator, P
+        case 1: //Linear Actuator, P and N gate
             //whatever
             break;
-        case 3: //Linear Actuator, N
+        case 2: //Valve Driver, N2O Valve
             //whatever
             break;
-        case 4: //Valve Driver, N2O Valve
-            //whatever
-            break;
-        case 5: //Valve Driver, N2 Valve
+        case 3: //Valve Driver, N2 Valve
             //whatever
             break;
         default:
