@@ -4,7 +4,9 @@
 //TODO:
 //Write switch case for doing each valve
 //The switch case will be a letter for each valve
-//Find drivers for
+//Find drivers for lin act
+
+//This doesn't need to be made with RTOS right?
 
 #include "DRV8825.h"
 
@@ -31,21 +33,38 @@ void setup()
 
 void loop()
 {
-    int action = 0;
+    char action = 0;
     switch (action) {
         case 0: //Stepper Motor, the fuel actuator
             //whatever
             break;
+        //LINEAR ACTUATOR HAS A SPECIFIC IMPLEMENTATION: ASK JUSTIN ;)
+        //Basically, the way the H-Bridge works means that there are 4 inputs
+        //Those being: P_FWD, P_BCKWD, N_FWD, N_BCKWD
+        //To work the bridge, one must only "close" two inputs
+        //Each input is essentialy a switch, and their function will 
+        //determine the motor direction
+        //In this case: here are the possible variants with direction
+        // P_FWD    P_BCKWD     N_FWD   N_BCKWD Direction
+        // open     close       open    close   forward
+        // close    open        close    open   backward
+        //You may notice that there could be more variations, like
+        //if P_FWD and P_BCKWD are both closed
+        //In short, DO NOT DO THIS
+        //Closing a backwards and forwards input with easily and swiftly
+        //fry the H-Bridge, killing it before it could lead a fruitful life
+        //So just follow the table and everything is hunky dory
+        //Source: https://www.modularcircuits.com/blog/articles/h-bridge-secrets/h-bridges-the-basics/
         case 1: //Linear Actuator, P
             //whatever
             break;
         case 3: //Linear Actuator, N
             //whatever
             break;
-        case 4: //Logic High, N2O Valve
+        case 4: //Valve Driver, N2O Valve
             //whatever
             break;
-        case 5: //Logic High, N2 Valve
+        case 5: //Valve Driver, N2 Valve
             //whatever
             break;
         default:
